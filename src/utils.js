@@ -30,6 +30,7 @@ function loadConfig() {
  * Get default configuration
  * @returns {Object} Default configuration
  */
+// Add to getDefaultConfig() function:
 function getDefaultConfig() {
     return {
         whatsapp: {
@@ -37,27 +38,12 @@ function getDefaultConfig() {
             maxAudioDuration: parseInt(process.env.MAX_AUDIO_DURATION) || 300
         },
         channels: {
-            music: process.env.CHANNEL_JID || "your_channel_jid@broadcast",
-            slowReverb: process.env.CHANNEL_JID || "your_channel_jid@broadcast",
-            official: process.env.CHANNEL_JID || "your_channel_jid@broadcast"
+            music: process.env.CHANNEL_JID || "120363422116225706@newsletter",
+            slowReverb: process.env.CHANNEL_JID || "120363422116225706@newsletter", 
+            official: process.env.CHANNEL_JID || "120363422116225706@newsletter"
         },
-        templates: {
-            slowReverb: {
-                title: "🎵 SLOWED AND REVERB 🎵",
-                footer: "THE DANUZ Z | VIBE CURATOR",
-                hashtags: "#SlowedReverb #Vibes #Music"
-            },
-            official: {
-                title: "🎶 OFFICIAL MUSIC 🎶",
-                footer: "OFFICIAL RELEASE",
-                hashtags: "#Official #Music"
-            },
-            music: {
-                title: "🎵 MUSIC RELEASE 🎵",
-                footer: "DANUZ Z VIBES",
-                hashtags: "#Music #NewRelease #Vibes"
-            }
-        }
+        channelType: process.env.CHANNEL_TYPE || "newsletter",
+        // ... rest of config
     };
 }
 

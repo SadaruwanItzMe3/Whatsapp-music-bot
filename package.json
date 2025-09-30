@@ -1,15 +1,15 @@
 {
   "name": "whatsapp-music-bot",
   "version": "1.0.0",
-  "description": "A WhatsApp bot that sends YouTube audio as voice messages to channels",
+  "description": "A WhatsApp bot that sends YouTube audio as voice messages to channels and creates formatted posts",
   "main": "src/bot.js",
   "scripts": {
     "start": "node src/bot.js",
     "dev": "nodemon src/bot.js",
     "setup": "npm install"
   },
-  "keywords": ["whatsapp", "bot", "music", "voice-message"],
-  "author": "Janaka",
+  "keywords": ["whatsapp", "bot", "music", "voice-message", "channel"],
+  "author": "itzmesandu",
   "license": "MIT",
   "dependencies": {
     "@whiskeysockets/baileys": "^6.4.0",
@@ -18,7 +18,7 @@
     "express": "^4.18.2",
     "cors": "^2.8.5"
   },
-  "engines": {
-    "node": ">=16.0.0"
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }

@@ -10,7 +10,7 @@ const config = loadConfig();
 // Start the bot
 async function startBot() {
     try {
-        console.log('🚀 Starting WhatsApp Music Bot on Railway...');
+        console.log('🚀 Starting WhatsApp Music Bot...');
         console.log('📱 Environment:', process.env.NODE_ENV);
         
         // Connect to WhatsApp
@@ -27,7 +27,8 @@ async function startBot() {
             await handleIncomingMessage(m, sock, config);
         });
         
-        console.log('✅ WhatsApp Music Bot is running on Railway');
+        console.log('✅ WhatsApp Music Bot is running...');
+        console.log('🤖 Use .help to see available commands');
         
     } catch (error) {
         console.error('❌ Failed to start bot:', error);

@@ -10,25 +10,28 @@ class ChannelPoster {
     /**
      * Create a formatted music post for channels
      */
-    async createMusicPost(videoInfo, audioPath, postType = 'slowReverb') {
+    async createMusicPost(videoInfo, audioPath, postType = 'music') {
         try {
-            const template = this.templates[postType] || this.templates.slowReverb;
+            const template = this.templates[postType] || this.templates.music;
             const channelJid = this.channels[postType] || this.channels.music;
 
             if (!channelJid) {
                 throw new Error('No channel JID configured for post type: ' + postType);
             }
 
-            // Create formatted message
-            const formattedMessage = this.formatMusicMessage(videoInfo, template);
+            console.log(`🎵 Creating ${postType} post for: ${videoInfo.title}`);
 
             // First send the audio as voice message
             await this.sendVoiceMessage(channelJid, audioPath);
 
-            // Then send the formatted text message
-            await this.sendFormattedMessage(channelJid, formattedMessage, videoInfo);
+            // Wait a bit before sending text
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
-            console.log(`✅ Music post sent to channel: ${channelJid}`);
+            // Create formatted message and send
+            const formattedMessage = this.formatMusicMessage(videoInfo, template, postType);
+            await this.sendFormattedMessage(channelJid, formattedMessage);
+
+            console.log(`✅ ${postType} post sent to channel: ${channelJid}`);
             return true;
 
         } catch (error) {
@@ -38,23 +41,36 @@ class ChannelPoster {
     }
 
     /**
-     * Format the music message based on template
+     * Format the music message based on template and type
      */
-    formatMusicMessage(videoInfo, template) {
+    formatMusicMessage(videoInfo, template, postType) {
         const duration = this.formatDuration(videoInfo.duration);
         
         let message = `*${template.title}*\n\n`;
         
-        // Artist and title section (like in your screenshot)
+        // Title section (like in your screenshot)
         message += `*${this.escapeMarkdown(videoInfo.title)}*\n\n`;
         
-        // Description section
-        message += `🎧 *Use headphones for better experience*\n`;
-        message += `⏱ *Duration*: ${duration}\n\n`;
-        
-        // Vibes section (like in your screenshot)
-        message += `🌊 *Better vibes*\n`;
-        message += `☁️ *For a moment of peace...*\n\n`;
+        // Different content based on post type
+        if (postType === 'slowReverb') {
+            message += `🌊 *Slowed and reverb vibes*\n`;
+            message += `🎧 *Use headphones for better experience*\n`;
+            message += `⏱ *Duration*: ${duration}\n\n`;
+            message += `☁️ *For a moment of peace...*\n`;
+            message += `✨ *Better vibes*\n\n`;
+        } else if (postType === 'official') {
+            message += `🎶 *Official Music Release*\n`;
+            message += `🎧 *Use headphones*\n`;
+            message += `⏱ *Duration*: ${duration}\n\n`;
+            message += `🔥 *Fresh drop*\n`;
+            message += `🎵 *Official version*\n\n`;
+        } else {
+            // Default music template
+            message += `🎧 *Use headphones for best experience*\n`;
+            message += `⏱ *Duration*: ${duration}\n\n`;
+            message += `🎵 *Music vibes*\n`;
+            message += `✨ *Enjoy the rhythm*\n\n`;
+        }
         
         // Footer
         message += `_${template.footer}_\n\n`;
@@ -91,28 +107,19 @@ class ChannelPoster {
             mimetype: 'audio/ogg; codecs=opus',
             ptt: true, // Mark as voice message
         });
+        
+        console.log(`🔊 Voice message sent to channel`);
     }
 
     /**
      * Send formatted text message to channel
      */
-    async sendFormattedMessage(channelJid, message, videoInfo) {
-        // Add a small delay to ensure voice message is sent first
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
+    async sendFormattedMessage(channelJid, message) {
         await this.sock.sendMessage(channelJid, {
-            text: message,
-            // You can add context info with thumbnail if needed
-            // contextInfo: {
-            //     externalAdReply: {
-            //         title: videoInfo.title,
-            //         body: 'Now playing...',
-            //         thumbnailUrl: videoInfo.thumbnail,
-            //         mediaType: 1,
-            //         sourceUrl: videoInfo.url
-            //     }
-            // }
+            text: message
         });
+        
+        console.log(`📝 Formatted message sent to channel`);
     }
 
     /**
@@ -121,7 +128,7 @@ class ChannelPoster {
     async createTextPost(channelType, title, content) {
         try {
             const channelJid = this.channels[channelType] || this.channels.music;
-            const template = this.templates[channelType] || this.templates.slowReverb;
+            const template = this.templates[channelType] || this.templates.music;
 
             if (!channelJid) {
                 throw new Error('No channel JID configured for: ' + channelType);

@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const PhoneAuth = require('./phoneAuth');
-const { getConfig } = require('./utils');
 
 let phoneAuthInstance = null;
 
@@ -20,10 +19,14 @@ function startWebServer(sock, config) {
     
     // Routes
     app.get('/', (req, res) => {
-        res.sendFile(path.join(__dirname, '../public/index.html'));
+        res.json({
+            message: 'WhatsApp Music Bot API',
+            status: 'running',
+            version: '1.0.0'
+        });
     });
     
-    // Health check endpoint for Railway
+    // Health check endpoint
     app.get('/health', (req, res) => {
         res.json({ 
             status: 'OK', 
@@ -32,71 +35,9 @@ function startWebServer(sock, config) {
         });
     });
     
-    // Phone authentication API
-    app.post('/api/phone-auth/request', async (req, res) => {
-        try {
-            const { phoneNumber } = req.body;
-            
-            if (!phoneNumber) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'Phone number is required'
-                });
-            }
-            
-            const result = await phoneAuthInstance.sendVerificationCode(phoneNumber);
-            res.json({
-                success: true,
-                ...result
-            });
-            
-        } catch (error) {
-            res.status(500).json({
-                success: false,
-                error: error.message
-            });
-        }
-    });
-    
-    app.post('/api/phone-auth/verify', async (req, res) => {
-        try {
-            const { verificationId, code } = req.body;
-            
-            if (!verificationId || !code) {
-                return res.status(400).json({
-                    success: false,
-                    error: 'Verification ID and code are required'
-                });
-            }
-            
-            const result = await phoneAuthInstance.verifyCode(verificationId, code);
-            res.json({
-                success: true,
-                ...result
-            });
-            
-        } catch (error) {
-            res.status(400).json({
-                success: false,
-                error: error.message
-            });
-        }
-    });
-    
-    app.get('/api/status', (req, res) => {
-        res.json({
-            success: true,
-            phoneAuthEnabled: phoneAuthInstance.enabled,
-            server: 'WhatsApp Bot Phone Auth API',
-            version: '1.0.0',
-            environment: process.env.NODE_ENV || 'development'
-        });
-    });
-    
     // Start server
     app.listen(port, '0.0.0.0', () => {
-        console.log(`🌐 Phone authentication server running on port ${port}`);
-        console.log(`🔗 Web Interface: https://your-app-name.railway.app`);
+        console.log(`🌐 Web server running on port ${port}`);
     });
     
     return app;

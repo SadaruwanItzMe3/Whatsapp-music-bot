@@ -8,14 +8,15 @@
         "slowReverb": "120363422116225706@newsletter",
         "official": "120363422116225706@newsletter"
     },
+    "channelType": "newsletter",
     "templates": {
         "slowReverb": {
             "title": "🎵 SLOWED AND REVERB 🎵",
-            "footer": "JXNXKX🤖 | ⚡",
+            "footer": "THE DANUZ Z | VIBE CURATOR",
             "hashtags": "#SlowedReverb #Vibes #Music"
         },
         "official": {
-            "title": "🎶 OFFICIAL MUSIC 🎶",
+            "title": "🎶 OFFICIAL MUSIC 🎶", 
             "footer": "OFFICIAL RELEASE",
             "hashtags": "#Official #Music"
         },

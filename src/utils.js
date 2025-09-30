@@ -33,31 +33,30 @@ function loadConfig() {
 function getDefaultConfig() {
     return {
         whatsapp: {
-            channelJid: process.env.CHANNEL_JID || "your_channel_jid_here@broadcast",
             prefix: process.env.PREFIX || ".",
-            maxAudioDuration: parseInt(process.env.MAX_AUDIO_DURATION) || 300,
-            reconnectTimeout: 5000,
-            qrTimeout: 60000,
-            connectionCheckInterval: 30000
+            maxAudioDuration: parseInt(process.env.MAX_AUDIO_DURATION) || 300
         },
-        youtube: {
-            maxRetries: 3,
-            requestTimeout: 30000,
-            highWaterMark: 33554432,
-            quality: "highestaudio"
+        channels: {
+            music: process.env.CHANNEL_JID || "your_channel_jid@broadcast",
+            slowReverb: process.env.CHANNEL_JID || "your_channel_jid@broadcast",
+            official: process.env.CHANNEL_JID || "your_channel_jid@broadcast"
         },
-        audio: {
-            format: "ogg",
-            codec: "libopus",
-            sampleRate: 48000,
-            channels: 1,
-            bitrate: "96k",
-            maxFileSizeMB: 16
-        },
-        paths: {
-            auth: "./auth_info",
-            temp: "./temp",
-            logs: "./logs"
+        templates: {
+            slowReverb: {
+                title: "🎵 SLOWED AND REVERB 🎵",
+                footer: "THE DANUZ Z | VIBE CURATOR",
+                hashtags: "#SlowedReverb #Vibes #Music"
+            },
+            official: {
+                title: "🎶 OFFICIAL MUSIC 🎶",
+                footer: "OFFICIAL RELEASE",
+                hashtags: "#Official #Music"
+            },
+            music: {
+                title: "🎵 MUSIC RELEASE 🎵",
+                footer: "DANUZ Z VIBES",
+                hashtags: "#Music #NewRelease #Vibes"
+            }
         }
     };
 }
@@ -88,32 +87,39 @@ function getConfig(path, defaultValue = null) {
 }
 
 /**
- * Update config value
- * @param {string} path - Config path
- * @param {*} value - New value
- * @returns {boolean} Success status
+ * Validate if a string is a valid YouTube URL
  */
-function updateConfig(path, value) {
+function isValidYouTubeUrl(url) {
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+    return youtubeRegex.test(url);
+}
+
+/**
+ * Generate a unique filename for audio files
+ */
+function generateAudioFilename(url) {
+    const videoId = new URL(url).searchParams.get('v');
+    const timestamp = Date.now();
+    return `${videoId}_${timestamp}.ogg`;
+}
+
+/**
+ * Extract video ID from YouTube URL
+ */
+function extractVideoId(url) {
     try {
-        const parts = path.split('.');
-        let current = config;
-        
-        for (let i = 0; i < parts.length - 1; i++) {
-            if (current[parts[i]] === undefined) {
-                current[parts[i]] = {};
-            }
-            current = current[parts[i]];
-        }
-        
-        current[parts[parts.length - 1]] = value;
-        
-        // Save to file
-        const configPath = path.join(__dirname, '..', 'config', 'config.json');
-        fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-        
-        return true;
+        const urlObj = new URL(url);
+        return urlObj.searchParams.get('v');
     } catch (error) {
-        console.error('Error updating config:', error);
-        return false;
+        return null;
     }
 }
+
+module.exports = {
+    isValidYouTubeUrl,
+    generateAudioFilename,
+    extractVideoId,
+    loadConfig,
+    getConfig,
+    getDefaultConfig
+};

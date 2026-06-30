@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Bot Phone Authentication</title>
+    <title>WhatsApp Music Bot — Pairing</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +16,7 @@
             justify-content: center;
             padding: 20px;
         }
-        
+
         .container {
             background: white;
             padding: 40px;
@@ -29,21 +25,10 @@
             max-width: 450px;
             width: 100%;
         }
-        
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        
+
+        h1 { color: #333; text-align: center; margin-bottom: 10px; font-size: 26px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+
         input {
             width: 100%;
             padding: 15px;
@@ -53,12 +38,8 @@
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
-        input:focus {
-            outline: none;
-            border-color: #25D366;
-        }
-        
+        input:focus { outline: none; border-color: #25D366; }
+
         button {
             width: 100%;
             padding: 15px;
@@ -70,35 +51,13 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        
-        .primary-btn {
-            background: #25D366;
-            color: white;
-        }
-        
-        .primary-btn:hover:not(:disabled) {
-            background: #128C7E;
-        }
-        
-        .secondary-btn {
-            background: #f8f9fa;
-            color: #333;
-            border: 2px solid #e1e1e1;
-        }
-        
-        .secondary-btn:hover {
-            background: #e9ecef;
-        }
-        
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
+
+        .primary-btn { background: #25D366; color: white; }
+        .primary-btn:hover:not(:disabled) { background: #128C7E; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
+        .hidden { display: none; }
+
         .status {
             margin-top: 20px;
             padding: 15px;
@@ -106,152 +65,138 @@
             text-align: center;
             font-weight: 500;
         }
-        
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
-        
-        .logo {
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error   { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info    { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+
+        .logo { text-align: center; margin-bottom: 20px; font-size: 48px; }
+
+        .pairing-code {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 4px;
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 48px;
+            color: #128C7E;
+            background: #f0fdf4;
+            border: 2px dashed #25D366;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
         }
+
+        .instructions {
+            font-size: 13px;
+            color: #555;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            line-height: 1.6;
+        }
+        .instructions ol { margin-left: 18px; margin-top: 6px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">📱</div>
-        <h1>WhatsApp Bot Authentication</h1>
-        <p class="subtitle">Verify your phone number to use the bot</p>
-        
+        <div class="logo">🎵</div>
+        <h1>WhatsApp Music Bot</h1>
+        <p class="subtitle">Link your bot account with a pairing code</p>
+
+        <div id="connected-section" class="hidden">
+            <div class="status success">✅ Bot is connected and online!</div>
+        </div>
+
         <div id="request-section">
-            <input type="tel" id="phoneNumber" placeholder="Enter your WhatsApp number with country code" required>
-            <button class="primary-btn" onclick="requestCode()">Send Verification Code</button>
+            <input type="tel" id="phoneNumber" placeholder="Phone number with country code (e.g. 14155552671)" required>
+            <button class="primary-btn" id="requestBtn" onclick="requestCode()">Get Pairing Code</button>
         </div>
-        
-        <div id="verify-section" class="hidden">
-            <input type="text" id="verificationCode" placeholder="Enter 6-digit code" maxlength="6">
-            <button class="primary-btn" onclick="verifyCode()">Verify Code</button>
-            <button class="secondary-btn" onclick="backToRequest()">Change Number</button>
+
+        <div id="code-section" class="hidden">
+            <div class="pairing-code" id="pairingCode">----</div>
+            <div class="instructions">
+                <strong>To link this device:</strong>
+                <ol>
+                    <li>Open <strong>WhatsApp</strong> on your phone</li>
+                    <li>Go to <strong>Settings → Linked Devices</strong></li>
+                    <li>Tap <strong>Link a Device</strong></li>
+                    <li>Tap <strong>"Link with phone number instead"</strong></li>
+                    <li>Enter the code above</li>
+                </ol>
+            </div>
         </div>
-        
+
         <div id="status"></div>
     </div>
 
     <script>
-        let currentVerificationId = '';
-        
         async function requestCode() {
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const statusDiv = document.getElementById('status');
-            
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const btn = document.getElementById('requestBtn');
+
             if (!phoneNumber) {
                 showStatus('Please enter a phone number', 'error');
                 return;
             }
-            
-            showStatus('Sending verification code to your WhatsApp...', 'info');
-            
+
+            btn.disabled = true;
+            showStatus('Requesting pairing code...', 'info');
+
             try {
                 const response = await fetch('/api/phone-auth/request', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ phoneNumber })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.success) {
-                    currentVerificationId = data.verificationId;
                     document.getElementById('request-section').classList.add('hidden');
-                    document.getElementById('verify-section').classList.remove('hidden');
-                    showStatus('✅ Verification code sent to your WhatsApp!', 'success');
+                    document.getElementById('code-section').classList.remove('hidden');
+                    document.getElementById('pairingCode').textContent = data.code;
+                    showStatus('Code generated! Enter it in WhatsApp within 60 seconds.', 'success');
                 } else {
                     showStatus(`Error: ${data.error}`, 'error');
+                    btn.disabled = false;
                 }
             } catch (error) {
                 showStatus(`Error: ${error.message}`, 'error');
+                btn.disabled = false;
             }
         }
-        
-        async function verifyCode() {
-            const code = document.getElementById('verificationCode').value;
-            const statusDiv = document.getElementById('status');
-            
-            if (!code || code.length !== 6) {
-                showStatus('Please enter a valid 6-digit code', 'error');
-                return;
-            }
-            
-            showStatus('Verifying code...', 'info');
-            
-            try {
-                const response = await fetch('/api/phone-auth/verify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        verificationId: currentVerificationId, 
-                        code: code 
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showStatus('✅ Phone number verified successfully! You can now use the bot.', 'success');
-                    document.getElementById('verify-section').classList.add('hidden');
-                } else {
-                    showStatus(`Error: ${data.error}`, 'error');
-                }
-            } catch (error) {
-                showStatus(`Error: ${error.message}`, 'error');
-            }
-        }
-        
-        function backToRequest() {
-            document.getElementById('request-section').classList.remove('hidden');
-            document.getElementById('verify-section').classList.add('hidden');
-            clearStatus();
-        }
-        
+
         function showStatus(message, type) {
             const statusDiv = document.getElementById('status');
             statusDiv.innerHTML = message;
             statusDiv.className = 'status ' + type;
         }
-        
-        function clearStatus() {
-            const statusDiv = document.getElementById('status');
-            statusDiv.innerHTML = '';
-            statusDiv.className = 'status';
+
+        // Poll connection state so the page updates automatically once linked
+        async function pollState() {
+            try {
+                const r = await fetch('/api/pairing-state');
+                const d = await r.json();
+
+                if (d.status === 'connected') {
+                    document.getElementById('request-section').classList.add('hidden');
+                    document.getElementById('code-section').classList.add('hidden');
+                    document.getElementById('connected-section').classList.remove('hidden');
+                    document.getElementById('status').innerHTML = '';
+                } else if (d.status === 'code_ready' && d.code) {
+                    document.getElementById('request-section').classList.add('hidden');
+                    document.getElementById('code-section').classList.remove('hidden');
+                    document.getElementById('pairingCode').textContent = d.code;
+                }
+            } catch (e) {}
+            setTimeout(pollState, 3000);
         }
-        
-        // Enter key support
+
         document.getElementById('phoneNumber').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                requestCode();
-            }
+            if (e.key === 'Enter') requestCode();
         });
-        
-        document.getElementById('verificationCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                verifyCode();
-            }
-        });
+
+        pollState();
     </script>
 </body>
 </html>

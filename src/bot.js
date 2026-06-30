@@ -17,9 +17,10 @@ async function startBot() {
         console.log(`📱 Channels: ${JSON.stringify(config.channels, null, 2)}`);
         console.log('');
 
-        // Connect to WhatsApp and pass message handler directly
+        // Connect to WhatsApp using pairing-code login (phone number, no QR)
         const sock = await connectToWhatsApp(
-            async (m) => await handleIncomingMessage(m, sock, config)
+            async (m) => await handleIncomingMessage(m, sock, config),
+            { usePairingCode: true }
         );
 
         // Start optional web server (QR viewer)

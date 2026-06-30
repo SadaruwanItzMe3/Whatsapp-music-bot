@@ -1,29 +1,35 @@
 {
-    "whatsapp": {
-        "prefix": ".",
-        "maxAudioDuration": 300
+  "whatsapp": {
+    "prefix": ".",
+    "maxAudioDuration": 300
+  },
+
+  "channels": {
+    "music":      "120363XXXXXXXXXXXXXXXXX@newsletter",
+    "slowReverb": "120363XXXXXXXXXXXXXXXXX@newsletter",
+    "official":   "120363XXXXXXXXXXXXXXXXX@newsletter"
+  },
+
+  "templates": {
+    "music": {
+      "title":    "🎵 MUSIC RELEASE 🎵",
+      "footer":   "DANUZ Z VIBES",
+      "hashtags": "#Music #NewRelease #Vibes #MusicBot"
     },
-    "channels": {
-        "music": "120363422116225706@newsletter",
-        "slowReverb": "120363422116225706@newsletter",
-        "official": "120363422116225706@newsletter"
+    "slowReverb": {
+      "title":    " SLOWED AND REVERB 🌊",
+      "footer":   "S4ND4RUW4N | VIBE",
+      "hashtags": "#SlowedReverb #Vibes #Chill #LoFi"
     },
-    "channelType": "newsletter",
-    "templates": {
-        "slowReverb": {
-            "title": "🎵 SLOWED AND REVERB 🎵",
-            "footer": "THE DANUZ Z | VIBE CURATOR",
-            "hashtags": "#SlowedReverb #Vibes #Music"
-        },
-        "official": {
-            "title": "🎶 OFFICIAL MUSIC 🎶", 
-            "footer": "OFFICIAL RELEASE",
-            "hashtags": "#Official #Music"
-        },
-        "music": {
-            "title": "🎵 MUSIC RELEASE 🎵",
-            "footer": "DANUZ Z VIBES",
-            "hashtags": "#Music #NewRelease #Vibes"
-        }
+    "official": {
+      "title":    "🎶 OFFICIAL MUSIC 🎶",
+      "footer":   "OFFICIAL RELEASE",
+      "hashtags": "#Official #NewMusic #Release"
     }
+  },
+
+  "webServer": {
+    "enable": true,
+    "port": 3000
+  }
 }

@@ -1,59 +1,53 @@
 require('dotenv').config();
 const { connectToWhatsApp } = require('./whatsappClient');
 const { handleIncomingMessage } = require('./commandHandler');
-const { loadConfig } = require('./utils');
+const { loadConfig, getConfig } = require('./utils');
 const { startWebServer } = require('./webServer');
 
-// Load configuration
 const config = loadConfig();
 
-// Start the bot
 async function startBot() {
     try {
-        console.log('🚀 Starting WhatsApp Music Bot...');
-        console.log('📱 Environment:', process.env.NODE_ENV);
-        
-        // Connect to WhatsApp
-        const sock = await connectToWhatsApp();
-        
-        // Start web server for phone authentication
-        if (config.webServer && config.webServer.enable) {
-            const port = process.env.PORT || config.webServer.port || 3000;
+        console.log('');
+        console.log('╔══════════════════════════════════╗');
+        console.log('║   🎵 WhatsApp Music Bot v2.0 🎵  ║');
+        console.log('╚══════════════════════════════════╝');
+        console.log('');
+        console.log(`📌 Prefix: ${config.whatsapp?.prefix || '.'}`);
+        console.log(`📱 Channels: ${JSON.stringify(config.channels, null, 2)}`);
+        console.log('');
+
+        // Connect to WhatsApp and pass message handler directly
+        const sock = await connectToWhatsApp(
+            async (m) => await handleIncomingMessage(m, sock, config)
+        );
+
+        // Start optional web server (QR viewer)
+        if (config.webServer?.enable) {
+            const port = process.env.PORT || config.webServer?.port || 3000;
             startWebServer(sock, { ...config, webServer: { ...config.webServer, port } });
         }
-        
-        // Set up message handler
-        sock.ev.on('messages.upsert', async (m) => {
-            await handleIncomingMessage(m, sock, config);
-        });
-        
-        console.log('✅ WhatsApp Music Bot is running...');
-        console.log('🤖 Use .help to see available commands');
-        
+
     } catch (error) {
-        console.error('❌ Failed to start bot:', error);
+        console.error('❌ Fatal error starting bot:', error);
         process.exit(1);
     }
 }
 
-// Handle graceful shutdown
+// Graceful shutdown
 process.on('SIGINT', () => {
-    console.log('\n🛑 Shutting down WhatsApp Music Bot...');
+    console.log('\n🛑 Shutting down...');
     process.exit(0);
 });
-
 process.on('SIGTERM', () => {
     console.log('\n🛑 Received SIGTERM. Shutting down...');
     process.exit(0);
 });
-
-// Handle uncaught exceptions
-process.on('uncaughtException', (error) => {
-    console.error('💥 Uncaught Exception:', error);
+process.on('uncaughtException', (err) => {
+    console.error('💥 Uncaught Exception:', err);
 });
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('💥 Unhandled Rejection at:', promise, 'reason:', reason);
+process.on('unhandledRejection', (reason) => {
+    console.error('💥 Unhandled Rejection:', reason);
 });
 
 startBot();

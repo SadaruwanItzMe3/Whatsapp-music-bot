@@ -1,0 +1,26 @@
+{
+  "name": "whatsapp-music-bot",
+  "version": "2.0.0",
+  "description": "WhatsApp bot that posts YouTube audio to channels",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js",
+    "dev": "nodemon src/bot.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.22",
+    "@distube/ytdl-core": "^4.16.10",
+    "@hapi/boom": "^10.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "whatsapp": {
+    "prefix": ".",
+    "maxAudioDuration": 300
+  },
+
+  "channels": {
+    "music":      "120363XXXXXXXXXXXXXXXXX@newsletter",
+    "slowReverb": "120363XXXXXXXXXXXXXXXXX@newsletter",
+    "official":   "120363XXXXXXXXXXXXXXXXX@newsletter"
+  },
+
+  "templates": {
+    "music": {
+      "title":    "🎵 MUSIC RELEASE 🎵",
+      "footer":   "S4ND4RUW4N",
+      "hashtags": "#Music #NewRelease #Vibes #MusicBot"
+    },
+    "slowReverb": {
+      "title":    "🌊 SLOWED AND REVERB 🌊",
+      "footer":   "S4ND4RUW4N | VIBE ",
+      "hashtags": "#SlowedReverb #Vibes #Chill #LoFi"
+    },
+    "official": {
+      "title":    "🎶 OFFICIAL MUSIC 🎶",
+      "footer":   "OFFICIAL RELEASE",
+      "hashtags": "#Official #NewMusic #Release"
+    }
+  },
+
+  "webServer": {
+    "enable": true,
+    "port": 3000
+  }
+}
